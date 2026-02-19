@@ -1,0 +1,32 @@
+[project]
+name = "bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.25.0",
+    "alembic>=1.18.4",
+    "dishka>=1.8.0",
+    "dynaconf>=3.2.12",
+    "fastapi>=0.129.0",
+    "langchain>=1.2.10",
+    "langchain-community>=0.4.1",
+    "langchain-openai>=1.1.10",
+    "pydantic>=2.12.5",
+    "sqlalchemy>=2.0.46",
+    "structlog>=25.5.0",
+    "uvicorn>=0.41.0",
+]
+
+[project.scripts]
+dummy = "src.bot.main:main"
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+    "ruff>=0.15.1",
+]

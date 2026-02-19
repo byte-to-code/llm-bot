@@ -1,0 +1,6 @@
+[app]
+app_name = "bot"
+
+[logging]
+level = "INFO"
+json_logs = false

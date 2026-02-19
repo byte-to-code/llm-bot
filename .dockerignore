@@ -1,0 +1,13 @@
+generated_*
+.idea
+.venv
+__pycache__
+.pytest_cache
+.mypy_cache
+.coverage
+.coverage.*
+.cache
+*.egg-info
+infra
+
+.env
