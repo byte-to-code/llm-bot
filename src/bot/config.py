@@ -15,6 +15,14 @@ class TelegramConfig(BaseModel):
     bot_name: str
 
 
+class OpenRouterConfig(BaseModel):
+    api_key: str
+    base_url: str
+    model: str
+    temperature: float
+    max_tokens: int
+
+
 class DatabaseConfig(BaseModel):
     host: str
     port: int

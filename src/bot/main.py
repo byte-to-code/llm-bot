@@ -12,7 +12,7 @@ from dishka.integrations.aiogram import (
 from dishka.integrations.fastapi import setup_dishka as setup_dishka_fastapi
 from fastapi import FastAPI
 
-from bot.bootstrap.di import DatabaseProvider, MainProvider
+from bot.bootstrap.di import DatabaseProvider, MainProvider, OpenRouterProvider
 from bot.config import Config, get_config
 from bot.logging import setup_logger
 from bot.presentation.bot.app import create_app as create_aiogram_app
@@ -24,6 +24,7 @@ def setup_di_container(config: Config) -> AsyncContainer:
         MainProvider(),
         DatabaseProvider(),
         AiogramProvider(),
+        OpenRouterProvider,
         context={Config: config},
     )
 
