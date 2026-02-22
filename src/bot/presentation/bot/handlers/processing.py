@@ -1,5 +1,6 @@
 import structlog
 from aiogram import Router, types
+from dishka.integrations.aiogram import FromDishka, inject
 
 from src.bot.infra.llm.setup import OpenRouterService
 
@@ -9,7 +10,10 @@ logger = structlog.get_logger()
 
 
 @ROUTER.message()
-async def processing(message: types.Message, service: OpenRouterService):
+@inject
+async def processing(
+    message: types.Message, service: FromDishka[OpenRouterService]
+):
     if message.text and message.text.startswith("/"):
         return
     if message.text is None:

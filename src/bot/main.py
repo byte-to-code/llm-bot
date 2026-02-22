@@ -12,11 +12,15 @@ from dishka.integrations.aiogram import (
 from dishka.integrations.fastapi import setup_dishka as setup_dishka_fastapi
 from fastapi import FastAPI
 
-from bot.bootstrap.di import DatabaseProvider, MainProvider, OpenRouterProvider
-from bot.config import Config, get_config
-from bot.logging import setup_logger
-from bot.presentation.bot.app import create_app as create_aiogram_app
-from bot.presentation.web.app import create_app as create_fastapi_app
+from src.bot.bootstrap.di import (
+    DatabaseProvider,
+    MainProvider,
+    OpenRouterProvider,
+)
+from src.bot.config import Config, get_config
+from src.bot.logging import setup_logger
+from src.bot.presentation.bot.app import create_app as create_aiogram_app
+from src.bot.presentation.web.app import create_app as create_fastapi_app
 
 
 def setup_di_container(config: Config) -> AsyncContainer:
@@ -24,7 +28,7 @@ def setup_di_container(config: Config) -> AsyncContainer:
         MainProvider(),
         DatabaseProvider(),
         AiogramProvider(),
-        OpenRouterProvider,
+        OpenRouterProvider(),
         context={Config: config},
     )
 
@@ -62,3 +66,6 @@ def create_app():
     logger.info("App initialized")
 
     return app
+
+
+app = create_app()

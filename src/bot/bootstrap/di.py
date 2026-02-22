@@ -2,7 +2,7 @@ from collections.abc import AsyncIterable
 
 import structlog
 from dishka import Provider, Scope, from_context, provide
-from openai import OpenAI, Timeout
+from openai import AsyncOpenAI
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -11,7 +11,8 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
-from bot.config import Config
+from src.bot.config import Config
+from src.bot.infra.llm.setup import OpenRouterService
 
 logger = structlog.get_logger()
 
@@ -22,13 +23,20 @@ class MainProvider(Provider):
 
 class OpenRouterProvider(Provider):
     @provide(scope=Scope.APP)
-    def get_openai_client(self, config: Config) -> OpenAI:
-        return OpenAI(
-            api_key=config.openrouter.api_key.get_secret_value(),
+    async def get_openai_client(
+        self, config: Config
+    ) -> AsyncIterable[AsyncOpenAI]:
+        client = AsyncOpenAI(
             base_url=config.openrouter.base_url,
-            timeout=Timeout(30.0),
-            max_retries=2,
+            api_key=config.openrouter.api_key,
         )
+        yield client
+
+    @provide(scope=Scope.REQUEST)
+    async def get_openrouter_service(
+        self, client: AsyncOpenAI, config: Config
+    ) -> OpenRouterService:
+        return OpenRouterService(client, config)
 
 
 class DatabaseProvider(Provider):

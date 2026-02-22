@@ -1,5 +1,8 @@
 [app]
+title = "LLM Bot"
 app_name = "bot"
+description = "Telegram bot with LLM"
+version = ""
 
 [logging]
 level = "INFO"
@@ -15,3 +18,11 @@ max_tokens = 512
 [telegram]
 token = ""
 bot_name = ""
+
+[database]
+host = "postgres"
+port = 5432
+user = ""
+password = ""
+database = ""
+bouncer = false

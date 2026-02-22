@@ -48,6 +48,7 @@ class Config(BaseModel):
     telegram: TelegramConfig
     database: DatabaseConfig
     logging: LoggingConfig
+    openrouter: OpenRouterConfig
 
     model_config = ConfigDict(
         alias_generator=AliasGenerator(validation_alias=lambda x: x.upper())

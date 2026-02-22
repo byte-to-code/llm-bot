@@ -2,7 +2,7 @@ from aiogram import Router, types
 from aiogram.filters import CommandStart
 from dishka import FromDishka
 
-from bot.config import Config
+from src.bot.config import Config
 
 ROUTER = Router()
 
