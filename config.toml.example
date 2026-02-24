@@ -18,6 +18,7 @@ max_tokens = 512
 [telegram]
 token = ""
 bot_name = ""
+max_history = 10
 
 [database]
 host = "postgres"
