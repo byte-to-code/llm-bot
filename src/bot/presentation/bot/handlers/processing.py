@@ -1,6 +1,7 @@
 import structlog
 from aiogram import Router, types
-from dishka.integrations.aiogram import AsyncSession, FromDishka, inject
+from dishka.integrations.aiogram import FromDishka, inject
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.config import Config
 from src.bot.infra.database.repositories.message_history_repository import (
@@ -9,11 +10,7 @@ from src.bot.infra.database.repositories.message_history_repository import (
 from src.bot.infra.llm.setup import OpenRouterService
 
 ROUTER = Router()
-
 logger = structlog.get_logger()
-
-
-# todo https://openrouter.ai/docs/api/api-reference/models/get-models
 
 
 @ROUTER.message()
@@ -22,6 +19,7 @@ async def processing(
     message: types.Message,
     service: FromDishka[OpenRouterService],
     session: FromDishka[AsyncSession],
+    config: FromDishka[Config],
 ):
     if message.text and message.text.startswith("/"):
         return
@@ -31,10 +29,16 @@ async def processing(
         )
         logger.error("Error", error="Failed to receive message")
         return
+
     message_repository = MessageRepository(
-        config=Config(), session=session, user_id=message.from_user.id
+        config=config, session=session, user_id=message.from_user.id
     )
-    await message_repository.add_message(message.text)
+    history_message = await message_repository.get_history()
     answer = await message.answer("Начинаю обработку...")
-    response = await service.llm_answer(message.text)
+    response = await service.llm_answer(history_message, message.text)
+    await message_repository.add_message(
+        message_text_user=message.text,
+        message_answer_system=response,
+        selected_model=config.openrouter.model,
+    )
     await answer.edit_text(response)

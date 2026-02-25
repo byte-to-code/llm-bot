@@ -13,6 +13,7 @@ class AppConfig(BaseModel):
 class TelegramConfig(BaseModel):
     token: str
     bot_name: str
+    max_history: int
 
 
 class OpenRouterConfig(BaseModel):
@@ -21,6 +22,7 @@ class OpenRouterConfig(BaseModel):
     model: str
     temperature: float
     max_tokens: int
+    system_prompt: str
 
 
 class DatabaseConfig(BaseModel):
