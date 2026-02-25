@@ -26,6 +26,6 @@ COPY alembic.ini ./
 ENV PYTHONPATH=/app
 
 # mrmamongo: Needed for healthcheck
-RUN apt-get update && apt-get install -y --no-install-recommends curl=7.74.0-1.3+deb11u10 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 CMD ["uvicorn", "src.bot.main:app", "--host", "0.0.0.0", "--port", "8000", "--factory"]
