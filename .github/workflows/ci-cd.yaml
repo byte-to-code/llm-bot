@@ -8,9 +8,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write 
+
     steps: 
       - uses: actions/checkout@v6
 
@@ -48,6 +46,9 @@ jobs:
 
   build:
     needs: test
+    permissions:
+      contents: read
+      packages: write 
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
