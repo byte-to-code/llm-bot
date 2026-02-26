@@ -24,7 +24,7 @@ COPY --from=builder /app /app
 COPY alembic.ini ./
 
 ENV PYTHONPATH=/app
-
+ENV PATH="/app/.venv/bin:$PATH"
 # mrmamongo: Needed for healthcheck
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 

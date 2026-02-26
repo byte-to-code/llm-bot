@@ -23,7 +23,7 @@ class MessageRepository:
             message_answer_system=message_answer_system,
             selected_model=selected_model,
         )
-        await self.session.add(message)
+        self.session.add(message)
         await self.session.commit()
 
     async def _clean_old_messages(self) -> None:
