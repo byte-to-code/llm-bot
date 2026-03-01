@@ -33,8 +33,8 @@ class MessageRepository:
         if len(messages) >= max_history:
             delete_size = len(messages) - max_history + 1
             old_messages = messages[-delete_size:]
-            for msg in old_messages:
-                await self.session.delete(msg)
+            for message in old_messages:
+                await self.session.delete(message)
         await self.session.commit()
 
     async def clean_context(self) -> None:

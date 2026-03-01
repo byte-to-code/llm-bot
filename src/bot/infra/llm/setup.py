@@ -13,7 +13,7 @@ class OpenRouterService:
         self.system_prompt = config.openrouter.system_prompt
 
     async def llm_answer(
-        self, history_message: list, user_message: str
+        self, history_message: list, user_message: str, model: str
     ) -> str:
         history_obj = await self._get_history_obj(history_message)
         history_obj.insert(
@@ -26,7 +26,7 @@ class OpenRouterService:
         history_obj.append({"role": "user", "content": user_message})
         try:
             completion = await self.client.chat.completions.create(
-                model=self.config.openrouter.model,
+                model=model,
                 messages=history_obj,
                 timeout=15.0,
             )

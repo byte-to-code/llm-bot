@@ -7,9 +7,11 @@ requires-python = ">=3.12"
 dependencies = [
     "aiogram>=3.25.0",
     "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
     "dishka>=1.8.0",
     "dynaconf>=3.2.12",
     "fastapi>=0.129.0",
+    "greenlet>=3.3.1",
     "langchain>=1.2.10",
     "langchain-community>=0.4.1",
     "langchain-openai>=1.1.10",
