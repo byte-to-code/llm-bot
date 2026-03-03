@@ -1,10 +1,13 @@
 name: CI/CD
 on: 
   push:
-    branches: [master, 'feat/**']
+    branches: [master, test, 'feat/**']
   pull_request:
     branches: [master]
 
+env:
+  CONFIG_PATH: /app/config.toml  
+  
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -42,7 +45,9 @@ jobs:
           uv run pytest tests/ \
             --cov=src \
             --cov-report=term-missing \
-            --cov-fail-under=1
+            --cov-fail-under=47
+        env:
+          PYTHONPATH: .
 
   build:
     needs: test

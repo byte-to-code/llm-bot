@@ -8,6 +8,10 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from src.bot.config import get_config
 from src.bot.infra.database.models.base import Base
+from src.bot.infra.database.models.message_history import MessageHistory
+from src.bot.infra.database.models.users import Users
+
+#TODO тут надо переписать автоподсос
 
 service_configuration = get_config()
 # this is the Alembic Config object, which provides

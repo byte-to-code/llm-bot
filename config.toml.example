@@ -2,7 +2,7 @@
 title = "LLM Bot"
 app_name = "bot"
 description = "Telegram bot with LLM"
-version = ""
+version = "0.0.1"
 
 [logging]
 level = "INFO"
@@ -24,7 +24,7 @@ max_history = 10
 [database]
 host = "postgres"
 port = 5432
-user = ""
-password = ""
-database = ""
+user = "postgres"
+password = "12345678"
+database = "postgres"
 bouncer = false
