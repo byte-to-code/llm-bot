@@ -3,8 +3,8 @@ from contextlib import AbstractAsyncContextManager
 
 from fastapi import FastAPI
 
-from bot.config import Config
-from bot.presentation.web.routers.internal import ROUTER as INTERNAL_ROUTER
+from src.bot.config import Config
+from src.bot.presentation.web.routers.internal import ROUTER as INTERNAL_ROUTER
 
 Lifespan = Callable[[FastAPI], AbstractAsyncContextManager[None]]
 

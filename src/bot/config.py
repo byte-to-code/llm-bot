@@ -13,6 +13,16 @@ class AppConfig(BaseModel):
 class TelegramConfig(BaseModel):
     token: str
     bot_name: str
+    max_history: int
+
+
+class OpenRouterConfig(BaseModel):
+    api_key: str
+    base_url: str
+    model: str
+    temperature: float
+    max_tokens: int
+    system_prompt: str
 
 
 class DatabaseConfig(BaseModel):
@@ -40,6 +50,7 @@ class Config(BaseModel):
     telegram: TelegramConfig
     database: DatabaseConfig
     logging: LoggingConfig
+    openrouter: OpenRouterConfig
 
     model_config = ConfigDict(
         alias_generator=AliasGenerator(validation_alias=lambda x: x.upper())

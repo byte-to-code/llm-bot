@@ -5,7 +5,7 @@ from typing import Any
 
 import structlog
 
-from bot.config import LoggingConfig
+from src.bot.config import LoggingConfig
 
 
 def setup_logger(config: LoggingConfig) -> None:
