@@ -7,12 +7,9 @@ from src.bot.infra.llm.setup import OpenRouterService
 from src.bot.bootstrap.di import OpenRouterProvider
 
 
-# Мок для класса AsyncOpenAI, чтобы не делать реальных запросов
 @pytest.fixture
 def mock_async_openai():
-    # Патчим класс AsyncOpenAI в том модуле, где он ИСПОЛЬЗУЕТСЯ (в di.py)
     with patch("src.bot.bootstrap.di.AsyncOpenAI") as mock:
-        # Настраиваем мок, чтобы он возвращал объект при вызове конструктора
         instance = MagicMock()
         mock.return_value = instance
         yield mock
@@ -28,17 +25,16 @@ class TestOpenRouterProvider:
         """
         provider = OpenRouterProvider()
 
-        # --- НАЧАЛО ИСПРАВЛЕНИЯ ---
-        # Создаем мок конфига с использованием spec (хорошая практика)
+
         mock_config = MagicMock(spec=Config)
         
-        # Явно создаем вложенный мок для openrouter, так как spec не создает вложенные объекты автоматически
+
         mock_config.openrouter = MagicMock()
         
-        # Теперь безопасно устанавливаем значения
+
         mock_config.openrouter.base_url = "https://test.openrouter.ai/v1"
         mock_config.openrouter.api_key = "k-or-v1-1234567890abcdef"
-        # --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+
 
         client_gen = provider.get_openai_client(mock_config)
         client = await anext(client_gen)
