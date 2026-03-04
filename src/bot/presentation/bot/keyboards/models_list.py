@@ -1,4 +1,23 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    WebAppInfo,
+)
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+from bot.config import Config
+
+
+def switch_model_webapp(config: Config) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        type="web_app",
+        text="Switch model",
+        web_app=WebAppInfo(
+            url=f"https://{config.app.web_app_url}/switch-model",
+        ),
+    )
+    return builder.as_markup()
 
 
 def models_list() -> InlineKeyboardMarkup:

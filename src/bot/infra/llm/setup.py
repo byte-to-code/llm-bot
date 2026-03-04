@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 import structlog
 from openai import APITimeoutError, AsyncOpenAI
 
@@ -5,7 +7,7 @@ from src.bot.config import Config
 
 logger = structlog.get_logger()
 
-
+# TODO: Переехать на Agno
 class OpenRouterService:
     def __init__(self, client: AsyncOpenAI, config: Config):
         self.client = client
@@ -13,7 +15,7 @@ class OpenRouterService:
         self.system_prompt = config.openrouter.system_prompt
 
     async def llm_answer(
-        self, history_message: list, user_message: str, model: str
+        self, history_message: Sequence, user_message: str, model: str
     ) -> str:
         history_obj = await self._get_history_obj(history_message)
         history_obj.insert(

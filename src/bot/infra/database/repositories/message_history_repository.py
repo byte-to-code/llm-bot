@@ -1,53 +1,41 @@
+from collections.abc import Sequence
+from uuid import UUID
+
 from sqlalchemy import delete, select
 
-from src.bot.config import Config
+from bot.infra.database.repositories.base import PostgresRepository
 from src.bot.infra.database.models.message_history import MessageHistory
 
 
-class MessageRepository:
-    def __init__(self, config: Config, session, user_id) -> None:
-        self.user_id = user_id
-        self.session = session
-        self.config = config
-
+class MessageRepository(PostgresRepository):
     async def add_message(
         self,
+        user_id: UUID,
         message_text_user: str,
         message_answer_system: str,
         selected_model: str,
     ) -> None:
-        await self._clean_old_messages()
         message = MessageHistory(
-            user_id=self.user_id,
+            user_id=user_id,
             message_text_user=message_text_user,
             message_answer_system=message_answer_system,
             selected_model=selected_model,
         )
         self.session.add(message)
-        await self.session.commit()
 
-    async def _clean_old_messages(self) -> None:
-        max_history = self.config.telegram.max_history
-        messages = await self.get_history()
-
-        if len(messages) >= max_history:
-            delete_size = len(messages) - max_history + 1
-            old_messages = messages[-delete_size:]
-            for message in old_messages:
-                await self.session.delete(message)
-        await self.session.commit()
-
-    async def clean_context(self) -> None:
+    async def clean_context(self, user_id: UUID) -> None:
         await self.session.execute(
-            delete(MessageHistory).where(user_id=self.user_id)
+            delete(MessageHistory).where(MessageHistory.user_id == user_id)
         )
-        await self.session.commit()
 
-    async def get_history(self) -> list[MessageHistory]:
+    async def get_history(
+        self, user_id: UUID, limit: int
+    ) -> Sequence[MessageHistory]:
         statement = (
             select(MessageHistory)
-            .where(MessageHistory.user_id == self.user_id)
+            .where(MessageHistory.user_id == user_id)
             .order_by(MessageHistory.created_at.desc())
+            .limit(limit)
         )
         result = await self.session.execute(statement)
         return result.scalars().all()

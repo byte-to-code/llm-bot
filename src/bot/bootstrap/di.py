@@ -1,7 +1,7 @@
 from collections.abc import AsyncIterable
 
 import structlog
-from dishka import Provider, Scope, from_context, provide
+from dishka import Provider, Scope, from_context, provide, provide_all
 from openai import AsyncOpenAI
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -11,10 +11,19 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
+from bot.infra.database.repositories.message_history_repository import (
+    MessageRepository,
+)
+from bot.infra.database.repositories.user_settings import (
+    UserSettingsRepository,
+)
+from bot.infra.database.repositories.users_repository import AddUserRepository
 from src.bot.config import Config
 from src.bot.infra.llm.setup import OpenRouterService
 
 logger = structlog.get_logger()
+
+TELEGRAM_DATA_CONTAINER_KEY = "dishka_container"
 
 
 class MainProvider(Provider):
@@ -76,3 +85,10 @@ class DatabaseProvider(Provider):
             engine, expire_on_commit=False
         )() as session:
             yield session
+
+    repositories = provide_all(
+        MessageRepository,
+        UserSettingsRepository,
+        AddUserRepository,
+        scope=Scope.REQUEST,
+    )

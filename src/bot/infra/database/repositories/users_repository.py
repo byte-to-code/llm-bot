@@ -1,46 +1,48 @@
-from __future__ import annotations
+from uuid import UUID
 
 from sqlalchemy import select, update
 
-from src.bot.config import Config
-from src.bot.infra.database.models.users import Users
+from bot.infra.database.models.user import UserModel
+from bot.infra.database.repositories.base import PostgresRepository
 
 
-class AddUserRepository:
-    def __init__(self, config: Config, session, user_id) -> None:
-        self.user_id = user_id
-        self.session = session
-        self.config = config
-
+class AddUserRepository(PostgresRepository):
     async def add_user(
         self,
+        user_id: int,
         role: str,
         selected_model: str,
     ) -> None:
-        user = Users(
-            user_id=self.user_id,
+        user = UserModel(
+            user_id=user_id,
             role=role,
             selected_model=selected_model,
         )
         self.session.add(user)
-        await self.session.commit()
 
-    async def get_user(self) -> Users | None:
-        statement = select(Users).where(Users.user_id == self.user_id)
+    async def get_user(
+        self, *, user_id: UUID | None = None, telegram_id: str | None = None
+    ) -> UserModel | None:
+        if user_id is None and telegram_id is None:
+            raise ValueError("user_id or telegram_id must be provided")
+        statement = select(UserModel)
+        if user_id is not None:
+            statement = statement.where(UserModel.user_id == user_id)
+        if telegram_id is not None:
+            statement = statement.where(UserModel.telegram_id == telegram_id)
         result = await self.session.execute(statement)
         return result.scalar_one_or_none()
 
-    async def get_user_model(self) -> str | None:
-        user = await self.get_user()
+    async def get_user_model(self, user_id: UUID) -> str | None:
+        user = await self.get_user(user_id=user_id)
         if user:
             return user.selected_model
         return None
 
     async def switch_model(self, selected_model: str) -> None:
         statement = (
-            update(Users)
-            .where(Users.user_id == self.user_id)
+            update(UserModel)
+            .where(UserModel.user_id == self.user_id)
             .values(selected_model=selected_model)
         )
         await self.session.execute(statement)
-        await self.session.commit()

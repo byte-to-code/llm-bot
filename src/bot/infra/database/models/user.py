@@ -1,8 +1,7 @@
-from __future__ import annotations
-
+import uuid
 from datetime import datetime
 
-from sqlalchemy import BigInteger, DateTime
+from sqlalchemy import UUID, BigInteger, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
@@ -12,9 +11,9 @@ from src.bot.infra.database.models.base import Base
 # todo https://docs.sqlalchemy.org/en/20/core/type_basics.html
 # todo https://habr.com/ru/articles/751140/?ysclid=mm24tx69ni488756698
 # todo разобраться с enum
-class Users(Base):
+class UserModel(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True)
     user_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     role: Mapped[str] = mapped_column(default="user")
     selected_model: Mapped[str | None]
