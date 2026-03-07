@@ -8,13 +8,12 @@ from sqlalchemy.sql import func
 from src.bot.infra.database.models.base import Base
 
 
-# todo https://docs.sqlalchemy.org/en/20/core/type_basics.html
-# todo https://habr.com/ru/articles/751140/?ysclid=mm24tx69ni488756698
-# todo разобраться с enum
 class UserModel(Base):
     __tablename__ = "users"
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, unique=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True
+    )
+    telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     role: Mapped[str] = mapped_column(default="user")
     selected_model: Mapped[str | None]
     created_at: Mapped[datetime] = mapped_column(

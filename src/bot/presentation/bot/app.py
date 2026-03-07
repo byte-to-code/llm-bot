@@ -1,8 +1,9 @@
 import structlog
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher
+from aiogram.types import ErrorEvent
 
-from bot.core.errors import BotError
 from src.bot.config import Config
+from src.bot.core.errors import BotError
 from src.bot.presentation.bot.handlers.processing import (
     ROUTER as PROCESSING_ROUTER,
 )
@@ -22,12 +23,10 @@ def create_app(config: Config) -> tuple[Bot, Dispatcher]:
     dp = Dispatcher()
 
     @dp.error(BotError)
-    async def error_handler(
-        event: BotError, message: types.Message
-    ):  # TODO: ВЫНЕСТИ КУДА НИБУДЬ
-        logger.error("Critical error caused", message=event.message)
-        # do something with error
-        await message.answer(event.message)
+    async def error_handler(event: ErrorEvent):
+        logger.error("Critical error caused %r", event.exception)
+        if event.update.message:
+            await event.update.message.answer(f"Ошибка: {event.exception}")
 
     dp.include_router(START_ROUTER)
     dp.include_router(SWITCH_MODEL)

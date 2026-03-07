@@ -11,15 +11,18 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
-from bot.infra.database.repositories.message_history_repository import (
+from src.bot.config import Config
+from src.bot.infra.database.repositories.message_history_repository import (
     MessageRepository,
 )
-from bot.infra.database.repositories.user_settings import (
+from src.bot.infra.database.repositories.user_settings import (
     UserSettingsRepository,
 )
-from bot.infra.database.repositories.users_repository import AddUserRepository
-from src.bot.config import Config
+from src.bot.infra.database.repositories.users_repository import (
+    AddUserRepository,
+)
 from src.bot.infra.llm.setup import OpenRouterService
+from src.bot.interactors.process_message import ProcessMessageInteractor
 
 logger = structlog.get_logger()
 
@@ -46,6 +49,19 @@ class OpenRouterProvider(Provider):
         self, client: AsyncOpenAI, config: Config
     ) -> OpenRouterService:
         return OpenRouterService(client, config)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_process_message_interactor(
+        self,
+        message_repository: MessageRepository,
+        users_repository: AddUserRepository,
+        service: OpenRouterService,
+    ) -> ProcessMessageInteractor:
+        return ProcessMessageInteractor(
+            message_repository=message_repository,
+            users_repository=users_repository,
+            service=service,
+        )
 
 
 class DatabaseProvider(Provider):

@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlalchemy import delete, select
 
-from bot.infra.database.repositories.base import PostgresRepository
 from src.bot.infra.database.models.message_history import MessageHistory
+from src.bot.infra.database.repositories.base import PostgresRepository
 
 
 class MessageRepository(PostgresRepository):

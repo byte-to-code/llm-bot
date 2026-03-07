@@ -9,7 +9,7 @@ from sqlalchemy.sql import func
 from src.bot.infra.database.models.base import Base
 
 
-class MessageHistory(Base): # TODO: Убрать и переехать на agno
+class MessageHistory(Base):  # TODO: Убрать и переехать на agno
     __tablename__ = "message_history"
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(
@@ -21,4 +21,4 @@ class MessageHistory(Base): # TODO: Убрать и переехать на agno
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
-    user = relationship("Users", back_populates="messages")
+    user = relationship("UserModel", back_populates="messages")

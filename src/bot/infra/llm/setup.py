@@ -7,6 +7,7 @@ from src.bot.config import Config
 
 logger = structlog.get_logger()
 
+
 # TODO: Переехать на Agno
 class OpenRouterService:
     def __init__(self, client: AsyncOpenAI, config: Config):

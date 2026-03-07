@@ -1,8 +1,6 @@
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 from dishka import AsyncContainer
-from dishka.integrations.aiogram import FromDishka
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from bot.bootstrap.di import TELEGRAM_DATA_CONTAINER_KEY
 from src.bot.config import Config

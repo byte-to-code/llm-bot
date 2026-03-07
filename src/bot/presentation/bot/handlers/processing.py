@@ -2,8 +2,7 @@ import structlog
 from aiogram import Router, types
 from dishka.integrations.aiogram import FromDishka
 
-from bot.core.errors import BotError
-from bot.interactors.process_message import ProcessMessageInteractor
+from src.bot.interactors.process_message import ProcessMessageInteractor
 
 ROUTER = Router()
 logger = structlog.get_logger()

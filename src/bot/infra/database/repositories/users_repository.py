@@ -1,27 +1,28 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy import select, update
 
-from bot.infra.database.models.user import UserModel
-from bot.infra.database.repositories.base import PostgresRepository
+from src.bot.infra.database.models.user import UserModel
+from src.bot.infra.database.repositories.base import PostgresRepository
 
 
 class AddUserRepository(PostgresRepository):
     async def add_user(
         self,
-        user_id: int,
+        telegram_id: int,
         role: str,
         selected_model: str,
     ) -> None:
         user = UserModel(
-            user_id=user_id,
+            user_id=uuid4(),
+            telegram_id=telegram_id,
             role=role,
             selected_model=selected_model,
         )
         self.session.add(user)
 
     async def get_user(
-        self, *, user_id: UUID | None = None, telegram_id: str | None = None
+        self, *, user_id: UUID | None = None, telegram_id: int | None = None
     ) -> UserModel | None:
         if user_id is None and telegram_id is None:
             raise ValueError("user_id or telegram_id must be provided")
@@ -46,3 +47,20 @@ class AddUserRepository(PostgresRepository):
             .values(selected_model=selected_model)
         )
         await self.session.execute(statement)
+
+    async def get_or_create(self, telegram_id: int) -> tuple[UserModel, bool]:
+        user = await self.get_user(telegram_id=telegram_id)
+        if user:
+            return user, False
+
+        await self.add_user(
+            telegram_id=telegram_id,
+            role="user",
+            selected_model="qwen/qwen3-next-80b-instruct",
+            # todo дома поменять на дефолт
+        )
+        await (
+            self.session.commit()
+        )  # todo уточнить, где тогда должен быть коммит
+        user = await self.get_user(telegram_id=telegram_id)
+        return user, True

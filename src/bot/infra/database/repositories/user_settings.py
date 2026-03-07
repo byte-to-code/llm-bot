@@ -1,8 +1,8 @@
 from typing import Any
 from uuid import UUID
 
-from bot.infra.database.models.user_settings import UserSettingsModel
-from bot.infra.database.repositories.base import PostgresRepository
+from src.bot.infra.database.models.user_settings import UserSettingsModel
+from src.bot.infra.database.repositories.base import PostgresRepository
 
 
 class UserSettingsRepository(

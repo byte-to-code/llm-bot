@@ -1,5 +1,5 @@
-from datetime import datetime
 import os
+from datetime import UTC, datetime
 from pathlib import Path
 
 from dynaconf import Dynaconf
@@ -36,7 +36,7 @@ class OpenRouterConfig(BaseModel):
         return (
             Environment(autoescape=True)
             .from_string(prompt_path.read_text())
-            .render(now=datetime.now())
+            .render(now=datetime.now(UTC))
         )
 
     @property

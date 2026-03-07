@@ -5,7 +5,7 @@ from aiogram.types import (
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from bot.config import Config
+from src.bot.config import Config
 
 
 def switch_model_webapp(config: Config) -> InlineKeyboardMarkup:
