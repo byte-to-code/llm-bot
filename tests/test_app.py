@@ -14,7 +14,7 @@ def test_processing_router_included():
         config = Mock()
         config.telegram.token = TEST_TOKEN
 
-        bot, dp = create_app(config)
+        dp = create_app(config)
 
         assert PROCESSING_ROUTER in dp.sub_routers, (
             "Роутер обработки не подключен к диспетчеру"
