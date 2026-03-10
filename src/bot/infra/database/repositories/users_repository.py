@@ -2,6 +2,7 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import select, update
 
+from src.bot.config import get_config
 from src.bot.infra.database.models.user import UserModel
 from src.bot.infra.database.repositories.base import PostgresRepository
 
@@ -40,15 +41,20 @@ class AddUserRepository(PostgresRepository):
             return user.selected_model
         return None
 
-    async def switch_model(self, selected_model: str) -> None:
+    async def switch_model(
+        self, telegram_id: int, selected_model: str
+    ) -> None:
         statement = (
             update(UserModel)
-            .where(UserModel.user_id == self.user_id)
+            .where(UserModel.telegram_id == telegram_id)
             .values(selected_model=selected_model)
         )
         await self.session.execute(statement)
+        await self.session.commit()
 
     async def get_or_create(self, telegram_id: int) -> tuple[UserModel, bool]:
+        config = get_config()
+        selected_model = config.openrouter.model
         user = await self.get_user(telegram_id=telegram_id)
         if user:
             return user, False
@@ -56,11 +62,8 @@ class AddUserRepository(PostgresRepository):
         await self.add_user(
             telegram_id=telegram_id,
             role="user",
-            selected_model="qwen/qwen3-next-80b-instruct",
-            # todo дома поменять на дефолт
+            selected_model=selected_model,
         )
-        await (
-            self.session.commit()
-        )  # todo уточнить, где тогда должен быть коммит
+        await self.session.commit()
         user = await self.get_user(telegram_id=telegram_id)
         return user, True

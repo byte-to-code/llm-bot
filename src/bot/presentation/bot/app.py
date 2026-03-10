@@ -14,6 +14,7 @@ from src.bot.presentation.bot.handlers.switch_model.process_model_keyboard impor
 from src.bot.presentation.bot.handlers.switch_model.switch_model import (
     ROUTER as SWITCH_MODEL,
 )
+from src.bot.presentation.bot.middleware.user import UserMiddleware
 
 logger = structlog.get_logger()
 
@@ -21,6 +22,7 @@ logger = structlog.get_logger()
 def create_app(config: Config) -> tuple[Bot, Dispatcher]:
     bot = Bot(token=config.telegram.token)
     dp = Dispatcher()
+    dp.message.middleware(UserMiddleware())
 
     @dp.error(BotError)
     async def error_handler(event: ErrorEvent):

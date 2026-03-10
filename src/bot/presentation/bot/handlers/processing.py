@@ -14,6 +14,7 @@ async def processing(
     interactor: FromDishka[ProcessMessageInteractor],
 ):
     if message.from_user is None:
+        logger.info("No message from user")
         return
     if message.text and message.text.startswith("/"):
         return

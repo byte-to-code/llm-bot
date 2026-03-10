@@ -4,7 +4,6 @@ from aiogram.types import (
     CallbackQuery,
 )
 from dishka.integrations.aiogram import FromDishka, inject
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.config import Config
 from src.bot.infra.database.repositories.users_repository import (
@@ -23,21 +22,26 @@ logger = structlog.get_logger()
 @inject
 async def process_model_selection(
     callback: CallbackQuery,
-    session: FromDishka[AsyncSession],
     config: FromDishka[Config],
+    users_repository: AddUserRepository,
 ):
-    user_id = callback.from_user.id
+    telegram_id = callback.from_user.id
     selected_model = callback.data
 
-    users_repo = AddUserRepository(
-        config=config, session=session, user_id=user_id
-    )
+    try:
+        await users_repository.switch_model(telegram_id, selected_model)
+        await callback.message.edit_text(f"Выбрана модель: {selected_model}")
+        await callback.answer()
+    except Exception as e:
+        await users_repository.switch_model(
+            telegram_id, config.openrouter.model
+        )
 
-    check_user = await users_repo.get_user()
-    if check_user:
-        await users_repo.switch_model(selected_model)
-    else:
-        await users_repo.add_user(role="user", selected_model=selected_model)
-
-    await callback.message.edit_text(f"Выбрана модель: {selected_model}")
-    await callback.answer()
+        await callback.message.edit_text(
+            "Не удалось выбрать данную модель. Установлена модель по умолчанию."  # noqa: E501
+        )
+        logger.exception(
+            "Error when switch the model",
+            telegram_id=telegram_id,
+            error=str(e),
+        )

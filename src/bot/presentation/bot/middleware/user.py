@@ -1,12 +1,14 @@
+import structlog
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 from dishka import AsyncContainer
 
-from bot.bootstrap.di import TELEGRAM_DATA_CONTAINER_KEY
-from src.bot.config import Config
+from src.bot.bootstrap.di import TELEGRAM_DATA_CONTAINER_KEY
 from src.bot.infra.database.repositories.users_repository import (
     AddUserRepository,
 )
+
+logger = structlog.get_logger()
 
 
 class UserMiddleware(BaseMiddleware):
@@ -23,21 +25,27 @@ class UserMiddleware(BaseMiddleware):
             TELEGRAM_DATA_CONTAINER_KEY
         )
         if container is None:
-            raise ValueError("Container not found")  # TODO: Обработать
-
-        users_repository: AddUserRepository = container.get(AddUserRepository)
-        config = container.get(Config)
-        user = await users_repository.get_user()
-        if not user:
-            await users_repository.add_user(
-                role="user",
-                selected_model=config.openrouter.model,
-                user_id=event.from_user.id,
+            raise ValueError("Container not found")
+        async with container() as c:
+            users_repository = await c.get(AddUserRepository)
+            user, created = await users_repository.get_or_create(
+                telegram_id=event.from_user.id
             )
-            role = "user"
-        else:
-            role = user.role
-        if role == "blocked":
-            return None
-        data["user"] = user
+
+            if created:
+                logger.info(
+                    "New user:",
+                    telegram_id=event.from_user.id,
+                    user_id=str(user.user_id),
+                )
+            if user.role == "blocked":
+                logger.info(
+                    "Request from a blocked user",
+                    telegram_id=event.from_user.id,
+                    user_id=str(user.user_id),
+                )
+                return None
+
+            data["user"] = user
+            data["created"] = created
         return await handler(event, data)
