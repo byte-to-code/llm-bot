@@ -82,15 +82,14 @@ class AgnoProvider(Provider):
     @provide(scope=Scope.APP)
     def get_agno_agent(self, config: Config) -> Agent:
         return create_agno_assist(config)
-    
 
     @provide(scope=Scope.REQUEST)
     async def process_message_interactor(
         self,
         users_repository: AddUserRepository,
-        agent: Agent, 
+        agent: Agent,
     ) -> ProcessMessageInteractor:
         return ProcessMessageInteractor(
             users_repository=users_repository,
-            agent=agent, 
+            agent=agent,
         )

@@ -71,17 +71,17 @@ class DatabaseConfig(BaseModel):
 class LoggingConfig(BaseModel):
     level: str = "INFO"
     json_logs: bool = False
-    
-    
+
+
 class AgentConfig(BaseModel):
-    name: str 
+    name: str
     model_id: str
-    db_url: str 
-    mcp_url: str 
-    add_datetime_to_context: bool 
-    add_history_to_context: bool 
+    db_url: str
+    mcp_url: str
+    add_datetime_to_context: bool
+    add_history_to_context: bool
     num_history_runs: int
-    markdown: bool 
+    markdown: bool
     api_key: str
     base_agno_url: str
 
@@ -96,7 +96,7 @@ class Config(BaseModel):
 
     model_config = ConfigDict(
         alias_generator=AliasGenerator(validation_alias=lambda x: x.upper()),
-         populate_by_name=True 
+        populate_by_name=True,
     )
 
 

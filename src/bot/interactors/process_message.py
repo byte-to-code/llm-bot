@@ -11,11 +11,11 @@ class ProcessMessageInteractor:
     users_repository: AddUserRepository
 
     agent: Agent
+
     async def process_message(self, message: str, telegram_id: int):
         user = await self.users_repository.get_user(telegram_id=telegram_id)
         if user is None:
             raise ValueError("User not found")  # TODO: Отловить и обработать
-  
 
         model = await self.users_repository.get_user_model(
             user_id=user.user_id
@@ -23,10 +23,9 @@ class ProcessMessageInteractor:
         if model is None:
             raise ModelNotFoundError  # TODO: Отловить и обработать
 
-        
         response = await self.agent.arun(
             message,
-            session_id=str(telegram_id),  
+            session_id=str(telegram_id),
         )
 
-        return response.content 
+        return response.content
