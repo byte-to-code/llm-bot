@@ -28,3 +28,15 @@ user = "postgres"
 password = "12345678"
 database = "postgres"
 bouncer = false
+
+[agno]
+name = "Agno Assist"
+model_id=""
+db_url="postgresql+psycopg://postgres:postgres@postgres:5432/postgres"
+mcp_url="https://docs.agno.com/mcp"
+add_datetime_to_context=true
+add_history_to_context=true
+num_history_runs=3
+markdown=true
+api_key = ""
+base_agno_url=""

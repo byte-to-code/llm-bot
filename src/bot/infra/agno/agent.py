@@ -8,10 +8,11 @@ from src.bot.config import Config
 
 
 def create_agno_assist(config: Config) -> Agent:
-    """Создает и возвращает настроенного агента"""
+
     return Agent(
         name=config.agno.name,
-        model=OpenAIResponses(id=config.agno.model_id, api_key=config.agno.api_key,
+        model=OpenAIResponses(id=config.agno.model_id, 
+                              api_key=config.agno.api_key,
                               base_url=config.agno.base_agno_url),
         db=PostgresDb(db_url=config.agno.db_url), 
         tools=[MCPTools(url=config.agno.mcp_url)],
