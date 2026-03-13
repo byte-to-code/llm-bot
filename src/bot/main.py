@@ -15,7 +15,7 @@ from fastapi import FastAPI
 from src.bot.bootstrap.di import (
     DatabaseProvider,
     MainProvider,
-    OpenRouterProvider,
+    AgnoProvider
 )
 from src.bot.config import Config, get_config
 from src.bot.logging import setup_logger
@@ -28,7 +28,7 @@ def setup_di_container(config: Config) -> AsyncContainer:
         MainProvider(),
         DatabaseProvider(),
         AiogramProvider(),
-        OpenRouterProvider(),
+        AgnoProvider(),
         context={Config: config},
     )
 
