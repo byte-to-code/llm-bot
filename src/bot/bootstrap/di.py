@@ -12,7 +12,6 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
 from src.bot.config import Config
-from src.bot.infra.agno.agent import create_agno_assist
 from src.bot.infra.database.repositories.user_settings import (
     UserSettingsRepository,
 )
