@@ -23,6 +23,8 @@ WORKDIR /app
 COPY --from=builder /app /app
 COPY alembic.ini ./
 
+#TODO поменять PYTHONPATH на /src, чтобы импорты были не src.bot, a bot
+
 ENV PYTHONPATH=/app
 ENV PATH="/app/.venv/bin:$PATH"
 # mrmamongo: Needed for healthcheck
