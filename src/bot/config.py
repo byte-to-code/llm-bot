@@ -4,7 +4,7 @@ from pathlib import Path
 
 from dynaconf import Dynaconf
 from jinja2 import Environment
-from pydantic import AliasGenerator, BaseModel, ConfigDict
+from pydantic import AliasGenerator, BaseModel, ConfigDict, SecretStr
 
 
 class AppConfig(BaseModel):
@@ -20,11 +20,12 @@ class TelegramConfig(BaseModel):
 
 
 class OpenRouterConfig(BaseModel):
-    api_key: str
+    api_key: SecretStr
     base_url: str
     model: str
-    temperature: float
-    max_tokens: int
+    temperature: float | None = None
+    max_tokens: int | None = None
+    top_p: float | None = None
     system_prompt_path: Path | None = None
     _system_prompt: str | None = None
 
@@ -60,6 +61,7 @@ class DatabaseConfig(BaseModel):
     password: str
     database: str
     bouncer: bool = False
+    db_schema: str = "public"
 
     provider: str = "postgresql+asyncpg"
 
@@ -82,7 +84,7 @@ class AgentConfig(BaseModel):
     add_history_to_context: bool
     num_history_runs: int
     markdown: bool
-    api_key: str
+    api_key: SecretStr
     base_agno_url: str
 
 

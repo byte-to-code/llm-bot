@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import UUID, BigInteger, DateTime
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
 from src.bot.infra.database.models.base import Base

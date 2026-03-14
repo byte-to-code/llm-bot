@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterable
 
 import structlog
+from agno.agent import Agent
 from dishka import Provider, Scope, from_context, provide, provide_all
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -11,7 +12,7 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
 from src.bot.config import Config
-
+from src.bot.infra.agno.agent import create_agno_assist
 from src.bot.infra.database.repositories.user_settings import (
     UserSettingsRepository,
 )
@@ -19,10 +20,6 @@ from src.bot.infra.database.repositories.users_repository import (
     AddUserRepository,
 )
 from src.bot.interactors.process_message import ProcessMessageInteractor
-
-from agno.agent import Agent
-from src.bot.infra.agno.agent import create_agno_assist
-
 
 logger = structlog.get_logger()
 
@@ -79,10 +76,6 @@ class DatabaseProvider(Provider):
 
 
 class AgnoProvider(Provider):
-    @provide(scope=Scope.APP)
-    def get_agno_agent(self, config: Config) -> Agent:
-        return create_agno_assist(config)
-
     @provide(scope=Scope.REQUEST)
     async def process_message_interactor(
         self,

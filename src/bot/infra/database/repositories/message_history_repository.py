@@ -2,8 +2,8 @@ from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy import delete, select
-
 from src.bot.infra.database.models.message_history import MessageHistory
+
 from src.bot.infra.database.repositories.base import PostgresRepository
 
 

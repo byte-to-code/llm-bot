@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+
 from agno.agent import Agent
+
 from src.bot.core.errors import ModelNotFoundError
 from src.bot.infra.database.repositories.users_repository import (
     AddUserRepository,

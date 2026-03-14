@@ -1,7 +1,6 @@
 from agno.agent import Agent
 from agno.db.postgres import PostgresDb
-from agno.models.openai import OpenAIResponses
-
+from agno.models.openai import OpenAIChat
 from agno.tools.mcp import MCPTools
 
 from src.bot.config import Config
@@ -11,10 +10,17 @@ def create_agno_assist(config: Config) -> Agent:
 
     return Agent(
         name=config.agno.name,
-        model=OpenAIResponses(
+        model=OpenAIChat(
             id=config.agno.model_id,
-            api_key=config.agno.api_key,
+            api_key=config.agno.api_key.get_secret_value(),
             base_url=config.agno.base_agno_url,
+            role_map={
+                "user": "user",
+                "assistant": "assistant",
+                "system": "system",
+                "model": "assistant",
+                "tool": "tool",
+            },
         ),
         db=PostgresDb(db_url=config.agno.db_url),
         tools=[MCPTools(url=config.agno.mcp_url)],

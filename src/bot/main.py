@@ -12,7 +12,8 @@ from dishka.integrations.aiogram import (
 from dishka.integrations.fastapi import setup_dishka as setup_dishka_fastapi
 from fastapi import FastAPI
 
-from src.bot.bootstrap.di import DatabaseProvider, MainProvider, AgnoProvider
+from bot.infra.agno.provider import LLMProvider
+from src.bot.bootstrap.di import AgnoProvider, DatabaseProvider, MainProvider
 from src.bot.config import Config, get_config
 from src.bot.logging import setup_logger
 from src.bot.presentation.bot.app import create_app as create_aiogram_app
@@ -25,6 +26,7 @@ def setup_di_container(config: Config) -> AsyncContainer:
         DatabaseProvider(),
         AiogramProvider(),
         AgnoProvider(),
+        LLMProvider(),
         context={Config: config},
     )
 

@@ -3,7 +3,7 @@ from aiogram import F, Router
 from aiogram.types import (
     CallbackQuery,
 )
-from dishka.integrations.aiogram import FromDishka, inject
+from dishka.integrations.aiogram import FromDishka
 
 from src.bot.config import Config
 from src.bot.infra.database.repositories.users_repository import (
@@ -19,7 +19,6 @@ logger = structlog.get_logger()
     | F.data.startswith("openai/gpt-4.1")
     | F.data.startswith("mistralai/ministral-8b-2512")
 )
-@inject
 async def process_model_selection(
     callback: CallbackQuery,
     config: FromDishka[Config],
