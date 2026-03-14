@@ -19,13 +19,10 @@ class LLMProvider(Provider):
     @provide(scope=Scope.APP)
     async def get_openai_model(self, config: Config) -> OpenAIChat:
         return OpenAIChat(
-            api_key=config.openrouter.api_key.get_secret_value(),
-            base_url=config.openrouter.base_url,
-            id=config.openrouter.model,
-            name=config.openrouter.model,
-            max_completion_tokens=config.openrouter.max_tokens,
-            temperature=config.openrouter.temperature,
-            top_p=config.openrouter.top_p,
+            api_key=config.agno.api_key.get_secret_value(),
+            base_url=config.agno.base_agno_url,
+            id=config.agno.model_id,
+            name=config.agno.model_id,
             provider="VLLM",
             role_map={
                 "user": "user",
