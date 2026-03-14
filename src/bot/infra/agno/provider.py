@@ -4,7 +4,7 @@ from agno.models.openai import OpenAIChat
 from agno.tools.mcp import MCPTools
 from dishka import Provider, Scope, provide
 
-from bot.config import Config
+from src.bot.config import Config
 
 
 class LLMProvider(Provider):

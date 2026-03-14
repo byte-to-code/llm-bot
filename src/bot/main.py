@@ -12,9 +12,9 @@ from dishka.integrations.aiogram import (
 from dishka.integrations.fastapi import setup_dishka as setup_dishka_fastapi
 from fastapi import FastAPI
 
-from bot.infra.agno.provider import LLMProvider
 from src.bot.bootstrap.di import AgnoProvider, DatabaseProvider, MainProvider
 from src.bot.config import Config, get_config
+from src.bot.infra.agno.provider import LLMProvider
 from src.bot.logging import setup_logger
 from src.bot.presentation.bot.app import create_app as create_aiogram_app
 from src.bot.presentation.web.app import create_app as create_fastapi_app
